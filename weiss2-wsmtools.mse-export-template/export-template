@@ -3,7 +3,7 @@ short name: wsmtools
 full name: wsmtools Exporter
 position hint: 003
 icon: icon.png
-version: 2023-10-20
+version: 2026-05-31
 installer group: ronelm2000/weiss2/Export/wsmtools
 game: weiss2
 create directory: true
