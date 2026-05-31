@@ -65,6 +65,42 @@ This fork supports the newest mechanics, including "Link", "Choice", "Replay", "
    - If you type `<<<` and `>>>`, it will be replaced with the corresponding trait symbol.
    - If you type `AUTO`, it will be replaced with `<sym>A|</sym>` which outputs the AUTO symbol text. Further rules are provided in the `Keywords`.
 
+## 高畫質 / 印刷匯出（中文）
+
+若你想把卡片**印刷成實體卡**，請依下列步驟取得高畫質、可裁切的圖檔。
+
+### 1. 選擇匯出格式
+用 `File → Export Set`，選擇 `wsmtools Exporter` 模板後，在選項中：
+- **Export images**：勾選（要輸出圖檔才需要）。
+- **Image format**：選擇輸出格式。
+  - `jpg`：檔案最小、有失真壓縮（Tabletop Simulator 預設用此）。
+  - `png` / `tiff` / `bmp`：無損格式，**印刷建議使用**（推薦 `png` 或 `tiff`）。
+  - 註：`tiff` / `bmp` 是否能成功輸出，取決於你的 MSE 版本，請實際輸出一張確認檔案可開啟。
+- 也可以用 `File → Export Image` 單張匯出（該對話框可選 PNG/JPG 與縮放倍率）。
+
+### 2. 拉高畫質（解析度）
+卡片基準畫布為 448×626 px / 178 DPI，對印刷偏低。請在 wsmtools 的 **Zoom multiplier** 欄位填較大的值：
+- 填 `3` → 約 1344×1878 px，已遠超印刷常見的 300 DPI 需求。
+- 想更高可填 `4`。倍率越高，檔案越大、輸出越慢。
+- 用內建 `Export Image` 時，同樣把 scale 設為 `3` 以上。
+
+### 3. 加上 5mm 印刷留邊（方便裁切）
+MSE 本身無法在匯出時加留白，因此提供一支後處理腳本（Windows 內建 .NET，免安裝額外軟體）。
+
+匯出完成後，在 `weiss2.mse-game/devtools/` 內對輸出資料夾執行：
+```powershell
+.\add-print-border.ps1 -Path "你的卡圖資料夾"
+```
+常用參數：
+- `-BorderMM 5`：留邊寬度（毫米），預設 5mm，四邊皆套用。
+- `-Color White`：留邊顏色，可選 `White` / `Black` / `Transparent`（透明僅 png/tiff 有效）。
+- `-OutDir "輸出資料夾"`：指定另存位置；不填則直接覆蓋原圖。
+- `-JpegQuality 95`：jpg/jpeg 的存檔品質（1–100）。
+
+留邊以「實際毫米」計算（依每張圖的真實寬度換算），因此不論你用多少倍率匯出，都會是準確的 5mm。
+
+> 💡 macOS 注意：MSE2 沒有 macOS 版本，需透過 Wine / CrossOver 或 Windows 虛擬機執行 MSE 與上述 PowerShell 腳本。
+
 ## Known Issues
 #### I cannot type in Korean/Japanese!
 This has been reported to be a [known issue](https://github.com/twanvl/MagicSetEditor2/issues/121) in MSE 2.1.2. In order to resolve this issue, please instead download [this version of MSE](https://github.com/haganbmj/MagicSetEditor2/releases/tag/v2.2.2) while waiting for an update that hopefully fixes the issue. I have not created this plugin with these languages in mind tho, so if you need to request some adjustments, please file a issue and attach your `.mse-set` file so I can work on it.

@@ -23,13 +23,22 @@ option field:
 	type: text
 	name: zoom multiplier
 	default: 1.25
-	description: Zoom multiplier for the exported images.
+	description: Zoom multiplier for the exported images. Use a higher value (e.g. 3) for print-quality images.
+option field:
+	type: choice
+	name: image format
+	choice: jpg
+	choice: png
+	choice: tiff
+	choice: bmp
+	default: jpg
+	description: File format for the exported images. jpg is smallest (lossy); png/tiff/bmp are lossless and better for printing. tiff/bmp support depends on your MSE build.
 script:
 	zoom_int := to_number(options.zoom_multiplier)
-	if options.export_images == "yes" then 
+	if options.export_images == "yes" then
 	(
 		for each card in cards do (
-			write_image_file(card, file:"{sanitize_for_filename(card.api_serial)}.jpg", width: stylesheet.card_width * zoom_int, height: stylesheet.card_height * zoom_int);
+			write_image_file(card, file:"{sanitize_for_filename(card.api_serial)}.{options.image_format}", width: stylesheet.card_width * zoom_int, height: stylesheet.card_height * zoom_int);
 		)
 	)
 	to_string(to_json(cards))
